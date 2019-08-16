@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Science Direct Prettify
 // @namespace    http://tampermonkey.net/
-// @version      0.3.3
+// @version      0.3.4
 // @description  Get a better performance when reading papers from science direct website.
 // @author       Haoyu Pan
 // @match        https://www.sciencedirect.com/science/article/pii/*

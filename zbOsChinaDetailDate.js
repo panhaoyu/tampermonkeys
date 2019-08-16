@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Zhong Bao Detail Page Date Time
 // @namespace    http://tampermonkey.net/
-// @version      0.0.2
+// @version      0.0.3
 // @description  Automatically show the date and time, instead of only date.
 // @author       Haoyu Pan
 // @match        https://zb.oschina.net/*/detail.html?id=*
