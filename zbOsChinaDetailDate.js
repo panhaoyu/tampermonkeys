@@ -6,6 +6,7 @@
 // @author       Haoyu Pan
 // @match        https://zb.oschina.net/project/detail.html?id=*
 // @grant        none
+// @run-at       document-end
 // ==/UserScript==
 
 (async function () {
