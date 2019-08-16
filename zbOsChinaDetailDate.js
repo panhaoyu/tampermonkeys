@@ -4,7 +4,7 @@
 // @version      0.0.2
 // @description  Automatically show the date and time, instead of only date.
 // @author       Haoyu Pan
-// @match        https://zb.oschina.net/project/detail.html?id=*
+// @match        https://zb.oschina.net/*/detail.html?id=*
 // @grant        none
 // @run-at       document-end
 // ==/UserScript==
