@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Science Direct Prettify
 // @namespace    http://tampermonkey.net/
-// @version      0.4.1
+// @version      0.4.2
 // @description  Get a better performance when reading papers from science direct website.
 // @author       Haoyu Pan
 // @match        https://www.sciencedirect.com/science/article/pii/*
@@ -17,7 +17,7 @@
             e.style.fontFamily = "微软雅黑";
         });
 
-        window.setTimeout(main,1000);
+        window.setTimeout(main,100);
     }
 
     main();
