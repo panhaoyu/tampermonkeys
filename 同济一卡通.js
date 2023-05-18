@@ -4,7 +4,7 @@
 // @version      0.0.3
 // @description  下载同济一卡通数据
 // @author       Haoyu Pan
-// @match        https://yikatong.tongji.edu.cn/page/page
+// @match        https://yikatong.tongji.edu.cn/
 // @grant        none
 // ==/UserScript==
 
