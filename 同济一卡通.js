@@ -20,13 +20,15 @@
         "method": "POST",
     });
     const result = await response.json()
+    console.log(result.rows[0])
     const excelData = result.rows.map(i => ({
-        '交易时间': i['OCCTIME'],
-        '交易地点': i['MERCNAME'],
+        '交易时间': new Date(i['OCCTIME'].trim()),
+        '交易地点': i['MERCNAME'].trim(),
         '交易金额': i['TRANAMT'],
-        '交易类型': i['TRANNAME'],
+        '交易类型': i['TRANNAME'].trim(),
         '卡余额': i['CARDBAL'],
-    })).filter(i => ['持卡人开户', '持卡人消费', '领取补助'].includes(i.交易类型))
+    }))
+        .filter(i => ['持卡人开户', '持卡人消费', '领取补助'].includes(i['交易类型']))
     const wb = XLSX.utils.book_new()
     XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(excelData), "Sheet1")
     XLSX.writeFile(wb, "一卡通流水.xlsx")
