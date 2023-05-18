@@ -26,7 +26,7 @@
         '交易金额': i['TRANAMT'],
         '交易类型': i['TRANNAME'],
         '卡余额': i['CARDBAL'],
-    }))
+    })).filter(i => ['持卡人开户', '持卡人消费', '领取补助'].includes(i.交易类型))
     const wb = XLSX.utils.book_new()
     XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(excelData), "Sheet1")
     XLSX.writeFile(wb, "一卡通流水.xlsx")
