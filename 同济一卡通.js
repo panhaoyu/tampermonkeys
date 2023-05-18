@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         同济一卡通处理
 // @namespace    http://tampermonkey.net/
-// @version      0.0.1
+// @version      0.0.2
 // @description  下载同济一卡通数据
 // @author       Haoyu Pan
 // @match        https://yikatong.tongji.edu.cn/page/page
