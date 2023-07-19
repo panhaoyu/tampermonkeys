@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         同济本部羽毛球场馆查询
 // @namespace    http://tampermonkey.net/
-// @version      0.3
+// @version      0.4
 // @description  try to take over the world!
 // @author       You
 // @match        https://gym.tongji.edu.cn/Pc/
