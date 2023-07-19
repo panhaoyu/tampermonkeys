@@ -31,6 +31,7 @@
         element.appendChild(line)
     }
 
+    modalLog('正在加载依赖库')
     const axios = await import('https://cdn.jsdelivr.net/npm/axios/+esm')
     const dateFns = await import('https://cdn.jsdelivr.net/npm/date-fns@2.30.0/+esm')
     const client = axios.default.create({
