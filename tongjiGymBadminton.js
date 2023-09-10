@@ -29,6 +29,7 @@
         let line = document.createElement('p')
         line.innerText = text
         element.appendChild(line)
+        console.log(line)
     }
 
     modalLog('正在加载依赖库')
