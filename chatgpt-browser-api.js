@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT API By Browser Script
 // @namespace    http://tampermonkey.net/
-// @version      0.0.6
+// @version      0.0.7
 // @match        https://chat.openai.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=openai.com
 // @grant        none
@@ -103,9 +103,13 @@ class App {
             await sleep(500)
             switch (model) {
                 case 'gpt-3':
+                case 'gpt-3.5':
+                case 'gpt-3.5-turbo':
+                case 'gpt-3.5-turbo-16k':
                     gptModel3Button().click()
                     break
                 case 'gpt-4':
+                case 'gpt-4-plugin':
                     gptModel4Button().click()
                     break
             }
@@ -121,9 +125,10 @@ class App {
     observeMutations() {
         this.observer = new MutationObserver(async (mutations) => {
             if (!lastAnswer()) return
-            const lastText = getTextFromNode(lastAnswer())
-            console.log('answer', {text: lastText})
-            this.socket.send(JSON.stringify({type: 'answer', text: lastText}))
+            const text = getTextFromNode(lastAnswer())
+            const html = lastAnswer().innerHTML
+            console.log('answer', {text})
+            this.socket.send(JSON.stringify({type: 'answer', text, html}))
             await sleep(1000)
             if (stopGeneratingButton()) return
             if (regenerateButton()) {
