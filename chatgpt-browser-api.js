@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT API By Browser Script
 // @namespace    http://tampermonkey.net/
-// @version      0.0.5
+// @version      0.0.6
 // @match        https://chat.openai.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=openai.com
 // @grant        none
@@ -77,6 +77,15 @@ function sendButton() {
     return inputWidget().nextElementSibling
 }
 
+function answers() {
+    return Array.from(document.querySelectorAll('[role=presentation] .group [data-message-author-role=assistant]'))
+}
+
+function lastAnswer() {
+    const a = answers()
+    if (a.length === 0) return
+    return a[a.length - 1]
+}
 
 // Main app class
 class App {
@@ -111,11 +120,9 @@ class App {
 
     observeMutations() {
         this.observer = new MutationObserver(async (mutations) => {
-            const list = [...document.querySelectorAll('[role=presentation] .group [data-message-author-role=assistant]')]
-            const last = list[list.length - 1]
-            if (!last) return
-            const lastText = getTextFromNode(last.querySelector('div.flex.flex-grow.flex-col.gap-3'))
-            console.log('send', {text: lastText,})
+            if (!lastAnswer()) return
+            const lastText = getTextFromNode(lastAnswer())
+            console.log('answer', {text: lastText})
             this.socket.send(JSON.stringify({type: 'answer', text: lastText}))
             await sleep(1000)
             if (stopGeneratingButton()) return
@@ -129,7 +136,7 @@ class App {
             }
         })
 
-        this.observer.observe(document.body, {childList: true, subtree: true})
+        this.observer.observe(rightArea(), {childList: true, subtree: true})
     }
 
     sendHeartbeat() {
