@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name         ChatGPT API By Browser Script
 // @namespace    http://tampermonkey.net/
-// @version      0.0.1
+// @version      0.0.2
 // @match        https://chat.openai.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=openai.com
 // @grant        none
 // @license MIT
 // ==/UserScript==
 
-const WS_URL = `ws://localhost:8765`;
+const WS_URL = `ws://127.0.0.1:8765`;
 
 function getTextFromNode(node) {
     let result = '';
