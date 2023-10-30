@@ -122,21 +122,24 @@ class App {
         this.observeMutations()
     }
 
+    send(type, extra) {
+        console.log(type, extra)
+        this.socket.send(JSON.stringify({type, ...extra}))
+    }
+
     observeMutations() {
         this.observer = new MutationObserver(async (mutations) => {
             if (!lastAnswer()) return
             const text = getTextFromNode(lastAnswer())
             const html = lastAnswer().innerHTML
-            console.log('answer', {text})
-            this.socket.send(JSON.stringify({type: 'answer', text, html}))
+            this.send('answer', {text, html})
             await sleep(1000)
             if (stopGeneratingButton()) return
             if (regenerateButton()) {
                 // TODO 没有处理continue的按钮，或者其它别的按钮的逻辑
                 if (this.stop) return
                 this.stop = true
-                console.log('send', {type: 'stop'})
-                this.socket.send(JSON.stringify({type: 'stop'}))
+                this.send('stop')
                 this.observer.disconnect()
             }
         })
@@ -145,9 +148,7 @@ class App {
     }
 
     sendHeartbeat() {
-        if (this.socket.readyState === WebSocket.OPEN) {
-            this.socket.send(JSON.stringify({type: 'heartbeat'}))
-        }
+        if (this.socket.readyState === WebSocket.OPEN) this.send('heartbeat')
     }
 
     connect() {
@@ -169,10 +170,10 @@ class App {
             console.log('Server connection error, please check the server.')
             this.dom.innerHTML = '<div style="color: red ">API Error !</div>'
         }
-        this.socket.onmessage = (event) => {
+        this.socket.onmessage = event => {
             const data = JSON.parse(event.data)
             console.log('params', data)
-            this.start(data)
+            this.start(data).then()
         }
     }
 
@@ -181,9 +182,7 @@ class App {
             this.dom = document.createElement('div')
             this.dom.style = 'position: fixed top: 10px right: 10px z-index: 9999 display: flex justify-content: center align-items: center'
             document.body.appendChild(this.dom)
-
             this.connect()
-
             setInterval(() => this.sendHeartbeat(), 30000)
         })
     }
