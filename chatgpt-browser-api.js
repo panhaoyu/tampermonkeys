@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT API By Browser Script
 // @namespace    http://tampermonkey.net/
-// @version      0.0.3
+// @version      0.0.4
 // @match        https://chat.openai.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=openai.com
 // @grant        none
@@ -55,12 +55,26 @@ function gptModel4Button() {
         .find(i => i.textContent.trim() === 'GPT-4')
 }
 
-function inputArea() {
-    return document.querySelector('textarea')
+function formArea() {
+    return rightArea().querySelector('form')
+}
+
+function inputWidget() {
+    return formArea().querySelector('textarea')
+}
+
+function regenerateButton() {
+    return Array.from(formArea().querySelector('button'))
+        .find(i => i.textContent.trim().toLowerCase() === 'regenerate')
+}
+
+function stopGeneratingButton() {
+    return Array.from(formArea().querySelector('button'))
+        .find(i => i.textContent.trim().toLowerCase() === 'stop generating')
 }
 
 function sendButton() {
-    return inputArea().nextElementSibling
+    return inputWidget().nextElementSibling
 }
 
 
@@ -88,8 +102,8 @@ class App {
             }
             await sleep(500)
         }
-        inputArea().value = text
-        inputArea().dispatchEvent(new Event('input', {bubbles: true}))
+        inputWidget().value = text
+        inputWidget().dispatchEvent(new Event('input', {bubbles: true}))
         await sleep(500)
         sendButton().click()
         this.observeMutations()
@@ -101,29 +115,16 @@ class App {
             const last = list[list.length - 1]
             if (!last) return
             const lastText = getTextFromNode(last.querySelector('div.flex.flex-grow.flex-col.gap-3'))
-            console.log('send', {
-                text: lastText,
-            })
-            this.socket.send(
-                JSON.stringify({
-                    type: 'answer',
-                    text: lastText,
-                })
-            )
+            console.log('send', {text: lastText,})
+            this.socket.send(JSON.stringify({type: 'answer', text: lastText}))
             await sleep(1000)
-            const button = document.querySelector('.btn-neutral')
-            if (!button) return
-            if (button.querySelector('div').textContent.trim() !== 'Stop generating') {
+            if (stopGeneratingButton()) return
+            if (regenerateButton()) {
+                // TODO 没有处理continue的按钮，或者其它别的按钮的逻辑
                 if (this.stop) return
                 this.stop = true
-                console.log('send', {
-                    type: 'stop',
-                })
-                this.socket.send(
-                    JSON.stringify({
-                        type: 'stop',
-                    })
-                )
+                console.log('send', {type: 'stop'})
+                this.socket.send(JSON.stringify({type: 'stop'}))
                 this.observer.disconnect()
             }
         })
