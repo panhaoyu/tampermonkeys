@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT API By Browser Script
 // @namespace    http://tampermonkey.net/
-// @version      0.0.8
+// @version      0.0.13
 // @match        https://chat.openai.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=openai.com
 // @grant        none
@@ -74,7 +74,8 @@ function stopGeneratingButton() {
 }
 
 function sendButton() {
-    return inputWidget().nextElementSibling
+    const buttons = formArea().querySelectorAll('button')
+    return buttons[buttons.length - 1]
 }
 
 function answers() {
@@ -123,7 +124,7 @@ class App {
     }
 
     send(type, extra) {
-        console.log(type, extra)
+        // console.log(type, extra)
         this.socket.send(JSON.stringify({type, ...extra}))
     }
 
@@ -141,6 +142,22 @@ class App {
                 this.stop = true
                 this.send('stop')
                 this.observer.disconnect()
+                await sleep(1000)
+                document.dispatchEvent(new KeyboardEvent('keypress', {
+                    bubbles: true,        // 事件是否冒泡
+                    cancelable: true,     // 事件是否可以被取消
+                    ctrlKey: true,        // 是否按下Ctrl键
+                    shiftKey: true,       // 是否按下Shift键
+                    keyCode: 8,           // Backspace的键码是8
+                    key: "Backspace",     // 键名
+                }))
+                await sleep(1000)
+                document.activeElement.dispatchEvent(new KeyboardEvent('keypress', {
+                    bubbles: true,       // 事件是否冒泡
+                    cancelable: true,    // 事件是否可以被取消
+                    keyCode: 13,         // Enter键的键码是13
+                    key: "Enter",        // 键名
+                }))
             }
         })
 
