@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT API By Browser Script
 // @namespace    http://tampermonkey.net/
-// @version      0.0.4
+// @version      0.0.5
 // @match        https://chat.openai.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=openai.com
 // @grant        none
@@ -64,12 +64,12 @@ function inputWidget() {
 }
 
 function regenerateButton() {
-    return Array.from(formArea().querySelector('button'))
+    return Array.from(formArea().querySelectorAll('button'))
         .find(i => i.textContent.trim().toLowerCase() === 'regenerate')
 }
 
 function stopGeneratingButton() {
-    return Array.from(formArea().querySelector('button'))
+    return Array.from(formArea().querySelectorAll('button'))
         .find(i => i.textContent.trim().toLowerCase() === 'stop generating')
 }
 
