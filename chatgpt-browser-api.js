@@ -147,6 +147,7 @@ class App {
             // TODO 没有处理continue的按钮，或者其它别的按钮的逻辑。以下是可能出现的其它情况：
             //   Network error。会有明确的文本提示，以及regenerate的按钮
             //     一般情况下，如果提示词不是太复杂，都是可以直接再次生成的，点击该按钮即可。
+            //   Continue。目前还没有对该按钮进行分析，应该是与其它的按钮在同一个位置的。
             if (regenerateButton()) {
                 if (this.stop) return
                 this.stop = true
