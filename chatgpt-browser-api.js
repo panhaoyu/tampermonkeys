@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT API By Browser Script
 // @namespace    http://tampermonkey.net/
-// @version      0.0.22
+// @version      0.0.23
 // @match        https://chat.openai.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=openai.com
 // @grant        none
@@ -176,6 +176,7 @@ class App {
 
     connect() {
         this.socket = new WebSocket(WS_URL)
+        console.log('Connecting')
         this.socket.onopen = () => {
             console.log('Server connected, can process requests now.')
             this.dom.innerHTML = '<div style="color: green ">API Connected !</div>'
