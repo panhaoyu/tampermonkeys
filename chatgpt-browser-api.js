@@ -176,7 +176,6 @@ class App {
 
     connect() {
         this.socket = new WebSocket(WS_URL)
-        console.log('Connecting')
         this.socket.onopen = () => {
             console.log('Server connected, can process requests now.')
             this.dom.innerHTML = '<div style="color: green ">API Connected !</div>'
@@ -201,14 +200,12 @@ class App {
         }
     }
 
-    init() {
-        window.addEventListener('load', () => {
-            this.dom = document.createElement('div')
-            this.dom.style = 'position: fixed top: 10px right: 10px z-index: 9999 display: flex justify-content: center align-items: center'
-            document.body.appendChild(this.dom)
-            this.connect()
-            setInterval(() => this.sendHeartbeat(), 30000)
-        })
+    async init() {
+        this.dom = document.createElement('div')
+        this.dom.style = 'position: fixed top: 10px right: 10px z-index: 9999 display: flex justify-content: center align-items: center'
+        document.body.appendChild(this.dom)
+        this.connect()
+        setInterval(() => this.sendHeartbeat(), 30000)
     }
 
 }
@@ -217,6 +214,5 @@ class App {
     'use strict'
 
     const app = new App()
-    app.init()
-    console.log('Loaded')
+    await app.init()
 })().then()
