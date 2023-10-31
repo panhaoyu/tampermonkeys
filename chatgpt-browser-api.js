@@ -193,7 +193,7 @@ class App {
             }, 2000)
         }
         this.socket.onerror = () => {
-            console.log('Server connection error, please check the server.')
+            console.log('Server connection  error, please check the server.')
             this.dom.innerHTML = '<div style="color: red ">API Error !</div>'
         }
         this.socket.onmessage = event => {
