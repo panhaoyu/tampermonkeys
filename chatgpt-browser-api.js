@@ -142,14 +142,14 @@ class App {
             const text = getTextFromNode(lastAnswer())
             const html = lastAnswer().innerHTML
             this.send('answer', {text, html})
-            await sleep(1000)
+            await sleep(500)
             if (stopGeneratingButton()) return
             // TODO 没有处理continue的按钮，或者其它别的按钮的逻辑
             if (regenerateButton()) {
                 if (this.stop) return
                 this.stop = true
                 this.observer.disconnect()
-                await sleep(1000)
+                await sleep(500)
                 for (const event of ['keydown', 'keyup']) {
                     document.dispatchEvent(new KeyboardEvent(event, {
                         bubbles: true,
@@ -159,10 +159,10 @@ class App {
                         key: "Backspace",
                         code: "Backspace"
                     }))
-                    await sleep(1000)
+                    await sleep(500)
                 }
                 deleteDialogConfirmButton().click()
-                await sleep(1000)
+                await sleep(500)
                 this.send('stop')
             }
         })
