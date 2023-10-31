@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatGPT API By Browser Script
 // @namespace    http://tampermonkey.net/
-// @version      0.0.13
+// @version      0.0.18
 // @match        https://chat.openai.com/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=openai.com
 // @grant        none
@@ -88,6 +88,14 @@ function lastAnswer() {
     return a[a.length - 1]
 }
 
+function dialog() {
+    return document.querySelector('[role=dialog]')
+}
+
+function deleteDialogConfirmButton() {
+    return Array.from(dialog().querySelectorAll('button')).find(i => i.textContent.trim() === 'Delete')
+}
+
 // Main app class
 class App {
     constructor() {
@@ -136,28 +144,26 @@ class App {
             this.send('answer', {text, html})
             await sleep(1000)
             if (stopGeneratingButton()) return
+            // TODO 没有处理continue的按钮，或者其它别的按钮的逻辑
             if (regenerateButton()) {
-                // TODO 没有处理continue的按钮，或者其它别的按钮的逻辑
                 if (this.stop) return
                 this.stop = true
-                this.send('stop')
                 this.observer.disconnect()
                 await sleep(1000)
-                document.dispatchEvent(new KeyboardEvent('keypress', {
-                    bubbles: true,        // 事件是否冒泡
-                    cancelable: true,     // 事件是否可以被取消
-                    ctrlKey: true,        // 是否按下Ctrl键
-                    shiftKey: true,       // 是否按下Shift键
-                    keyCode: 8,           // Backspace的键码是8
-                    key: "Backspace",     // 键名
-                }))
+                for (const event of ['keydown', 'keyup']) {
+                    document.dispatchEvent(new KeyboardEvent(event, {
+                        bubbles: true,
+                        cancelable: true,
+                        shiftKey: true,
+                        ctrlKey: true,
+                        key: "Backspace",
+                        code: "Backspace"
+                    }))
+                    await sleep(1000)
+                }
+                deleteDialogConfirmButton().click()
                 await sleep(1000)
-                document.activeElement.dispatchEvent(new KeyboardEvent('keypress', {
-                    bubbles: true,       // 事件是否冒泡
-                    cancelable: true,    // 事件是否可以被取消
-                    keyCode: 13,         // Enter键的键码是13
-                    key: "Enter",        // 键名
-                }))
+                this.send('stop')
             }
         })
 
