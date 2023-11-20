@@ -41,15 +41,36 @@ function leftArea() {
     return document.querySelector('[aria-label="Chat history"]')
 }
 
-function newChatButton() {
-    return Array.from(leftArea().querySelectorAll('a'))
-        .find(i => i.textContent.trim() === 'New Chat')
+
+function switchButton() {
+    return Array.from(document.querySelectorAll('[aria-haspopup="menu"]'))
+        .find(e => e.textContent.startsWith('ChatGPT'))
 }
+
+switchButton().focus()
+document.dispatchEvent(new Event('keydown', {
+    bubbles: true, cancelable: true, key: "Space", code: "Space"
+}))
+
+console.log(document.querySelectorAll('[role="menuitem"]'))
 
 function gptModel3Button() {
     return Array.from(rightArea().querySelectorAll('button[type=button]'))
         .find(i => i.textContent.trim() === 'GPT-3.5')
 }
+
+console.log(gptModel3Button())
+
+async function startNewChat() {
+    for (const event of ['keydown', 'keyup']) {
+        document.dispatchEvent(new KeyboardEvent(event, {
+            bubbles: true, cancelable: true, shiftKey: true, ctrlKey: true, key: "O", code: "O"
+        }))
+        await sleep(500)
+    }
+}
+
+await startNewChat()
 
 function gptModel4Button() {
     return Array.from(rightArea().querySelectorAll('button[type=button]'))
@@ -108,8 +129,7 @@ class App {
     async start({text, model, newChat}) {
         this.stop = false
         if (newChat) {
-            newChatButton().click()
-            await sleep(500)
+            await startNewChat()
             switch (model) {
                 case 'gpt-3':
                 case 'gpt-3.5':
