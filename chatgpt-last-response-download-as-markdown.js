@@ -50,6 +50,14 @@
         }
     }
 
+    // 使用这个函数实现读取html。
+    async function getLastHtml() {
+        const agentTurns = document.querySelectorAll('.agent-turn');
+        const lastAgentTurn = agentTurns[agentTurns.length - 1]
+        const lastHtmlElement = lastAgentTurn.querySelector('[data-message-author-role="assistant"] > div')
+        return lastHtmlElement.innerHTML
+    }
+
     // 重写 getLastResponseText 函数
     async function getLastResponseText() {
         // 点击复制按钮
@@ -69,18 +77,22 @@
 
     // Function to handle the button click
     async function handleButtonClick() {
-        const responseText = await getLastResponseText();
-        if (!responseText) {
-            alert('No response found to save.');
-            return;
-        }
+        // const responseText = await getLastResponseText();
+        // if (!responseText) {
+        //     alert('No response found to save.');
+        //     return;
+        // }
 
-        const filename = `ChatGPT_Response_${formatDate(new Date())}.md`;
-        downloadToFile(responseText, filename, 'text/markdown');
+        // const filename = `ChatGPT_Response_${formatDate(new Date())}.md`;
+        // downloadToFile(responseText, filename, 'text/markdown');
 
-        const filePath = `C:/Users/panha/Downloads/${filename}`;
-        copyToClipboard(filePath);
+        // const filePath = `C:/Users/panha/Downloads/${filename}`;
+        // copyToClipboard(filePath);
         // alert(`Response saved and file path copied to clipboard:\n${filePath}`);
+
+        const lastHtml = await getLastHtml()
+        console.log(lastHtml)
+        await copyHtmlToClipboard(lastHtml)
     }
 
     // Create and add the button to the page
@@ -95,5 +107,29 @@
         document.body.appendChild(button);
     }
 
+    async function copyHtmlToClipboard(html) {
+        try {
+            await window.navigator.clipboard.write([
+                new ClipboardItem({
+                    'text/html': new Blob([html], {type: 'text/html'})
+                })
+            ]);
+            console.log('HTML copied to clipboard');
+        } catch (error) {
+            console.error('Failed to copy: ', error);
+        }
+    }
+
+    async function sleep(seconds) {
+        await new Promise(resolve => setTimeout(resolve, seconds))
+    }
+
     addButton();
+
+
+// 示例：调用函数
+    const htmlContent = `<p>Hello <strong>World</strong></p>`;
+    copyHtmlToClipboard(htmlContent);
+
+
 })();
